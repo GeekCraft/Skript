@@ -1,1 +1,120 @@
+#-################################################-#
+#This skript is made by WeeHee                     #
+#https://www.spigotmc.org/members/weehee.179372/   #
+#                                                  #
+#Please don't copy to your own skripts,            #
+#but feel free to learn something:-)               #
+#                                                  #
+#The skript is on danish, reply on the post        #
+#for any qustions.                                 #
+#-################################################-#
 
+options:
+	#No permission message
+	noperm: &cDu har ikke tilladelse til det her!
+variables:
+	#Sæt en prefix her eller brug kommanden "/abc setprefix". Du kan også bruge color codes.
+	{prefix} = "/abc setprefix"
+	#Sæt en tid eller brug /abc settime. Eksempel 1 minute 11 minutes eller 1 hour
+	{time} = "5 minutes"
+command /autobroadcaster [<text>] [<text>]:
+	aliases: abc
+	trigger:
+		if arg 1 is not set:
+			execute player command "/abc help"
+		if arg 1 is "help":
+			if player has permission "abc.help" or "abc.admin":
+				send "&a----------&2AutoBroadCaster&a----------"
+				send "&2AutoBroadCaster: &7/abc set <besked> &a: &7Sæt en broadcast besked."
+				send "&2AutoBroadCaster: &7/abc delete <id> &a: &7Slet en broadcast besked via ID /abc list."
+				send "&2AutoBroadCaster: &7/abc confirm &a: &7Bekræft sletning af en broadcast besked."
+				send "&2AutoBroadCaster: &7/abc list &a: &7Liste over broadcast beskeder."
+				send "&2AutoBroadCaster: &7/broadcast &a: &7Random broadcast ud af de satte broadcast beskeder."
+				send "&2AutoBroadCaster: &7/broadcast <besked> &a: &7Broadcast en besked som du skriver."
+				send "&a----------------------------------"
+			else:
+				send "%{prefix}% {@noperm}"
+		if arg 1 is "set":
+			if player has permission "abc.set" or "abc.admin":
+				if arg 2 is set:
+					add 1 to {messagenumber}
+					set {message::%{messagenumber}%} to coloured arg 2
+					send "&2AutoBroadCaster: &aSatte broadcast nummer %{messagenumber}% til %{message::%{messagenumber}%}%"
+				else:
+					send "&2AutoBroadCaster: &cSæt en broadcast besked"
+			else:
+				send "%{prefix}% {@noperm}"
+		if arg 1 is "delete":
+			if player has permission "abc.delete" or "abc.admin":
+				if arg 2 is set:
+					if {message::%arg 2%} is set:
+						send "&2AutoBroadCaster: &cSikker på at slette?"
+						send "&2AutoBroadCaster: &c/broadcast confirm"
+						set {deleteaction::%player%} to "true"
+						set {deleteaction::message%player%} to arg 2
+					else:
+						send "&2AutoBroadCaster: &cBroadcast besked existere ikke!"
+			else:
+				send "%{prefix}% {@noperm}"
+		if arg 1 is "confirm":
+			if player has permission "abc.confirm" or "abc.admin":
+				if {deleteaction::%player%} is "true":
+					if {deleteaction::message%player%} is set:
+						send "&2AutoBroadCaster: &aSlettede broadcast beskeden %{message::%{deleteaction::message%player%}%}%"
+						delete {message::%{deleteaction::message%player%}%}
+						delete {deleteaction::message%player%}
+						delete {deleteaction::%player%}
+			else:
+				send "%{prefix}% {@noperm}"
+		if arg 1 is "list":
+			if player has permission "abc.list" or "abc.admin":
+				loop {messagenumber} times:
+					add 1 to {messagenumberloop}
+					if {message::%{messagenumberloop}%} is set:
+						send "&2AutoBroadCaster: &aId: &c%{messagenumberloop}% &aBesked: &c%{message::%{messagenumberloop}%}%"
+					else:
+						delete {messagenumber}
+				if {messagenumberloop} is not set:
+					send "&2AutoBroadCaster: &cIngen broadcast beskeder sat!"
+				else:
+					delete {messagenumberloop}
+			else:
+				send "%{prefix}% {@noperm}"
+		if arg 1 is "setprefix":
+			if player has permission "abc.setprefix" or "abc.admin":
+				if arg 2 is set:
+					set {prefix} to arg 2
+					wait 1 tick
+					send "&2AutoBroadCaster: &aSatte %arg 2% til skriptets prefix"
+				else:
+					send "&2AutoBroadCaster: &cSæt skriptets prefix."
+			else:
+				send "%{prefix}% {@noperm}"
+		if arg 1 is "abctime":
+			if player has permission "abc.settime" or "abc.admin":
+				if arg 2 is set:
+					set {time} to arg 2
+					wait 1 tick
+					send "&2AutoBroadCaster: &aSatte %arg 2% til AutoBroadCast tid"
+				else:
+					send "&2AutoBroadCaster: &cSæt tids mellemrum til hver AutoBroadCast &2Normalt er sat til '5 minutes'."
+			else:
+				send "%{prefix}% {@noperm}"
+command /broadcast [<text>]:
+	trigger:
+		if arg 1 is "random":
+			if player has permission "abc.random" or "abc.admin":
+				set {_broadcast} to a random element out of {message::*}
+				broadcast "{prefix} &f%{_broadcast}%"
+			else:
+				send "%{prefix}% {@noperm}"
+		if arg 1 is set:
+			if arg 1 is not "random":
+				if player has permission "abc.broadcast" or "abc.admin":
+					broadcast "{prefix} &f%coloured arg 1%"
+				else:
+					send "%{prefix}% {@noperm}"
+every {time}:
+	if {message::*} is set:
+		set {_broadcast} to a random element out of {message::*}
+		broadcast "{prefix} &f%{_broadcast}%"
