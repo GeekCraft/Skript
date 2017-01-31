@@ -22,12 +22,16 @@ command /silence [<text>]:
 			send "&b___ &3___ &b___ &3___ &b&lSilenceChat &3___ &b___ &3___ &b___"
 			stop
 		if arg 1 is "perm":
-			if {silence.perm} is set:
-				delete {silence.perm}
-				broadcast "Chat was unsilenced!"
+			if {silence.time} is not set:
+				if {silence.perm} is set:
+					delete {silence.perm}
+					broadcast "Chat was unsilenced!"
+				else:
+					set {silence.perm} to true
+					broadcast "Chat was silenced (Permanent)"
 			else:
-				set {silence.perm} to true
-				broadcast "Chat was silenced (Permanent)"
+				send "&cThe chat is already silenced!"
+				stop
 			stop
 		if arg 1 is set:
 			set {_arg} to arg 1
@@ -35,14 +39,18 @@ command /silence [<text>]:
 			if {_arg} contains "h" or "H":
 				if {_arg} contains "1","2","3","4","5","6","7","8" or "9":
 					if {silence.time} is not set:
-						replace "h" in {_arg} with " hours"
-						wait 1 tick
-						set {silence.type} to "minutes"
-						set {silence.time} to {_arg}
-						if {_arg} is greater than or equal to 2:
-							broadcast "Chat was silenced (%{_arg}% hours)"
-						if {_arg} is "1":
-							broadcast "Chat was silenced (1 hour)"
+						if {silence.perm} is not set:
+							replace "h" in {_arg} with " hours"
+							wait 1 tick
+							set {silence.type} to "minutes"
+							set {silence.time} to {_arg}
+							if {_arg} is greater than or equal to 2:
+								broadcast "Chat was silenced (%{_arg}% hours)"
+							if {_arg} is "1":
+								broadcast "Chat was silenced (1 hour)"
+						else:
+							send "&cThe chat is already silenced!"
+							stop
 					else:
 						send "&cThe chat is already silenced!"
 						stop
@@ -51,14 +59,18 @@ command /silence [<text>]:
 			if {_arg} contains "m" or "M":
 				if {_arg} contains "1","2","3","4","5","6","7","8" or "9":
 					if {silence.time} is not set:
-						replace "m" in {_arg} with ""
-						wait 1 tick
-						set {silence.type} to "minutes"
-						set {silence.time} to {_arg}
-						if {_arg} is greater than or equal to 2:
-							broadcast "Chat was silenced (%{_arg}% minutes)"
-						if {_arg} is "1":
-							broadcast "Chat was silenced (1 minute)"
+						if {silence.perm} is not set:
+							replace "m" in {_arg} with ""
+							wait 1 tick
+							set {silence.type} to "minutes"
+							set {silence.time} to {_arg}
+							if {_arg} is greater than or equal to 2:
+								broadcast "Chat was silenced (%{_arg}% minutes)"
+							if {_arg} is "1":
+								broadcast "Chat was silenced (1 minute)"
+						else:
+							send "&cThe chat is already silenced!"
+							stop
 					else:
 						send "&cThe chat is already silenced!"
 						stop
