@@ -58,7 +58,7 @@ command /stats [<offline player>]:
 				format slot 22 of player with diamond pickaxe named "&rKills" with lore "%{kills::%player%}% kills" to be unstealable
 				format slot 24 of player with diamond hoe named "&rDeaths" with lore "%{deaths::%player%}% deaths" to be unstealable
 				format slot 39 of player with paper named "&rBalance" with lore "%balance of player%" to be unstealable
-				format slot 41 of player with diamond named "&rRank" with lore "%{_group}%" to be unstealable
+				format slot 41 of player with diamond named "&rRank" with lore "%coloured prefix of player%" to be unstealable
 		if arg 1 is set:
 			if {joins::%arg 1%} is set:
 				open chest with 6 row named "Player stats" to player
@@ -95,7 +95,7 @@ command /stats [<offline player>]:
 				format slot 22 of player with diamond pickaxe named "&rKills" with lore "%{kills::%arg 1%}% kills" to be unstealable
 				format slot 24 of player with diamond hoe named "&rDeaths" with lore "%{deaths::%arg 1%}% deaths" to be unstealable
 				format slot 39 of player with paper named "&rBalance" with lore "%balance of arg 1%" to be unstealable
-				format slot 41 of player with diamond named "&rRank" with lore "%{_group}%" to be unstealable
+				format slot 41 of player with diamond named "&rRank" with lore "%coloured prefix of arg 1%" to be unstealable
 command /stat:
 	permission: stats.use
 	permission message: {@noperm}
