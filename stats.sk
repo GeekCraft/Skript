@@ -25,7 +25,6 @@ command /stats [<offline player>]:
 		if arg 1 is not set:
 			if {joins::%player%} is set:
 				open chest with 6 row named "Player stats" to player
-				set {_group} to player's group
 				wait 1 tick
 				format slot 0 of player with stained glass pane:4 named "" with lore "" to be unstealable
 				format slot 1 of player with stained glass pane:1 named "" with lore "" to be unstealable
@@ -61,9 +60,8 @@ command /stats [<offline player>]:
 				format slot 39 of player with paper named "&rBalance" with lore "%balance of player%" to be unstealable
 				format slot 41 of player with diamond named "&rRank" with lore "%{_group}%" to be unstealable
 		if arg 1 is set:
-			if {joins::%arg 1%} is set
+			if {joins::%arg 1%} is set:
 				open chest with 6 row named "Player stats" to player
-				set {_group} to arg 1's group
 				wait 1 tick
 				format slot 0 of player with stained glass pane:4 named "" with lore "" to be unstealable
 				format slot 1 of player with stained glass pane:1 named "" with lore "" to be unstealable
