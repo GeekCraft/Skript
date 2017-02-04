@@ -15,9 +15,11 @@ on join:
 		set {deaths::%player%} to 0
 options:
 	noperm: &cNo permission message
+	prefix: &3Stats>
 command /stats [<offline player>]:
 	permission: stats.use
 	permission message: {@noperm}
+	usage: {@prefix} &b/stats (player)"
 	trigger:
 		if arg 1 is not set:
 			open chest with 6 row named "Player stats" to player
@@ -89,6 +91,14 @@ command /stats [<offline player>]:
 			format slot 22 of player with diamond pickaxe named "&rKills" with lore "%{kills::%arg 1%}% kills" to be unstealable
 			format slot 24 of player with diamond hoe named "&rDeaths" with lore "%{deaths::%arg 1%}% deaths" to be unstealable
 			format slot 40 of player with paper named "&rBalance" with lore "%balance of arg 1%" to be unstealable
+command /stat:
+	permission: stats.use
+	permission message: {@noperm}
+	usage: {@prefix} &b/stats (player)"
+	trigger:
+		send "{@prefix} &bYou had used the wrong command please use:"
+		send "{@prefix} &b/stats (player)"
+		stop
 on mine of any ore:
 	add 1 to {ore.mined::%player%}
 on death of player:
